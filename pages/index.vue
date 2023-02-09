@@ -10,6 +10,6 @@
   </template>
 
   <script setup>
-const { data } = await useFetch("/api/bands/");
+const { data } = await useFetch("/api/bands");
 
 </script>
