@@ -1,17 +1,15 @@
 <template>
-    <div>
-      <p>Metal Map</p>
-      <div>
-        <ul>
-          <li v-for="band in data">{{ band }}</li>
-        </ul>
-      </div>
-    </div>
+     <div>
+      <h1>Metal map</h1>
+      <Map />
+     </div>
   </template>
 
   <script setup>
-  import { getBands, getBandsInCountry, queryBands } from "../controllers/bandController"
+  //import { getBands, getBandsInCountry, queryBands } from "../controllers/bandController"
 //const { data } = await useFetch("/api/bands/genre/Industrial")
-const { data } = await queryBands({country: "I"});
-
+// const { data } = await queryBands({country: "I"});
 </script>
+
+<style scoped>
+</style>

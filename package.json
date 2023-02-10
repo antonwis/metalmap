@@ -8,6 +8,8 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@vue-leaflet/vue-leaflet": "^0.8.2",
+    "leaflet": "^1.9.3",
     "nuxt": "^3.1.2"
   },
   "dependencies": {
