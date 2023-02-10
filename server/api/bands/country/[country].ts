@@ -4,12 +4,22 @@ export default defineEventHandler(async (event) => {
    
     if(event.context.params) {
     const { country } = event.context.params;
+    const params = getQuery(event);
+
+    let query = `SELECT * FROM bands WHERE country LIKE '%${country}%'`;
+    if(params.genre || params.status || params.name) query += ` AND `;
+    if(params.name) query += `name LIKE '%${params.name}%'`;
+    if(params.name && params.genre) query += ` AND `;
+    if(params.genre) query += `genre LIKE '%${params.genre}%'`;
+    if(params.name && params.genre && params.status) query += ` AND `;
+    if(params.status) query += `status LIKE '%${params.status}%'`
+    console.log("Query String: " + query)
+
     let connection;
     try {
         connection = await pool.getConnection();
         console.log("mariadb connection pool success");
-        const rows = await connection.query(`SELECT * FROM bands WHERE country LIKE '%${country}%'`);
-        console.log(rows);
+        const rows = await connection.query(query);
         //delete rows.meta;
         return rows;
 

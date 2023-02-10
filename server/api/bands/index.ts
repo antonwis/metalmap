@@ -4,10 +4,13 @@ export default defineEventHandler(async (event) => {
    
     const params = getQuery(event);
     let query = `SELECT * FROM bands`;
-    if(params.genre || params.status) query += ` WHERE`;
-    if(params.genre) query += ` genre LIKE '%${params.genre}%'`;
-    if(params.status) query += ` AND status LIKE '%${params.status}%'`
-    console.log("String: " + query)
+    if(params.genre || params.status || params.name) query += ` WHERE `;
+    if(params.name) query += `name LIKE '%${params.name}%'`;
+    if(params.name && params.genre) query += ` AND `;
+    if(params.genre) query += `genre LIKE '%${params.genre}%'`;
+    if(params.name && params.genre && params.status) query += ` AND `;
+    if(params.status) query += `status LIKE '%${params.status}%'`
+    console.log("Query String: " + query)
 
 
     let connection;
