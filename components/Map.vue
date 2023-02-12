@@ -1,28 +1,107 @@
 <template>
-    <client-only>
-        <div style="height:600px; width:800px">
-    <l-map
-        v-model="zoom"
-        v-model:zoom="zoom"
-        :center="[50.0411622,21.9985728]"
-        :zoom-snap="0.25"
-    >
-        <l-tile-layer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        ></l-tile-layer>
-    </l-map>
-    
-</div>
-</client-only>
+      <div id='mapid'></div>
 </template>
 
 <script setup>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import borderData from "~/assets/geoLow.json"
+const { $L : L } = useNuxtApp();
 
-const zoom = ref(2);
+
+
+const geojson = ref(null);
+    const mapDiv = ref(null);
+    const borders = ref(borderData); // border data
+    const active = ref(false);
+    const band = ref(null);
+    const activeModal = ref(false);
+    const population = ref(0);
+    const country = ref("");
+    const bounds = ref(null);
+   
+
+const setStyle = () => {
+      return {
+        fillColor: "#000000", //fill color (obv)
+        weight: 1, // border paksuus
+        opacity: 1, // border opacity 0-1
+        color: "green", //border fill color
+        dashArray: "", // border viivoja
+        fillOpacity: 0.3 // fill opacity (lol) 0-1
+      };
+    };
+
+    const highlightFeature = (e) => {
+      const layer = e.target;
+      !active.value
+        ? layer.setStyle({
+            fillColor: "#ffffff", //fill color (obv)
+            color: "#ffffff",
+            dashArray: "",
+            fillOpacity: 0.15
+          })
+        : null;
+    };
+    const resetHighlight = (e) => {
+      !active.value ? geojson.value.resetStyle(e.target) : null;
+    };
+    const zoomToFeature = (e) => {
+      const countryCode = e.target.feature.properties.iso_a2;
+      geojson.value.resetStyle();
+      mapDiv.value.fitBounds(e.target.getBounds());
+      active.value = true;
+      population.value = e.target.feature.properties.pop_est;
+      country.value = e.target.feature.properties.name;
+      const layer = e.target;
+      layer.setStyle({
+        fillColor: "#ffffff",
+        color: "#ffffff",
+        dashArray: "",
+        fillOpacity: 0.25
+      });
+    };
+    const onEachFeature = (feature, layer) => {
+      layer.on({
+        mouseover: highlightFeature, //Interaction events
+        mouseout: resetHighlight,
+        click: zoomToFeature
+      });
+    };
+
+const initMap = () => {
+      mapDiv.value = L.map('mapid', {
+        maxBounds: bounds.value,
+        maxBoundsViscosity: 1.0,
+        zoomControl: false
+      }).setView(L.latLng(60.15568, 24.95535), 8);
+      L.control.zoom({ position: "bottomright" }).addTo(mapDiv.value);
+      L.tileLayer(
+        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png", // tileset
+        {
+          attribution:
+            "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors", // credits
+          maxZoom: 6, // kuinka lähelle voi zoom
+          minZoom: 4 // kuinka kauas voi zoom out
+        }
+      ).addTo(mapDiv.value);
+      geojson.value = L.geoJSON(borders.value, {
+        style: setStyle, // stylet
+        onEachFeature: onEachFeature // kutsutaan joka featuressa (lisää listeners ja muita memes)
+      }).addTo(mapDiv.value);
+    };
+
+    onMounted(() => {
+      bounds.value = ref(new L.LatLngBounds(new L.LatLng(-60, -181),  new L.LatLng(90, 181))); 
+      initMap();
+     })
+
 </script>
 
 <style scoped>
-
+#mapid {
+    height: calc(100%);
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+}
 </style>

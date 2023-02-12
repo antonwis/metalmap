@@ -1,6 +1,5 @@
 <template>
      <div>
-      <h1>Metal map</h1>
       <Map />
      </div>
   </template>
