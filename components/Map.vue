@@ -1,5 +1,15 @@
 <template>
+  <div>
       <div id='mapid'></div>
+      <Sidebar
+      :active="active"
+      :population="population"
+      :country="country"
+      @side-active="sideActive"
+      @open-details="bandDetails"
+      
+      />
+    </div>
 </template>
 
 <script setup>
@@ -62,7 +72,7 @@ const setStyle = () => {
     };
     const onEachFeature = (feature, layer) => {
       layer.on({
-        mouseover: highlightFeature, //Interaction events
+        mouseover: highlightFeature,
         mouseout: resetHighlight,
         click: zoomToFeature
       });
@@ -76,24 +86,38 @@ const initMap = () => {
       }).setView(L.latLng(60.15568, 24.95535), 8);
       L.control.zoom({ position: "bottomright" }).addTo(mapDiv.value);
       L.tileLayer(
-        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png", // tileset
+        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png", 
         {
           attribution:
-            "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors", // credits
-          maxZoom: 6, // kuinka lähelle voi zoom
-          minZoom: 4 // kuinka kauas voi zoom out
+            "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors", 
+          maxZoom: 6,
+          minZoom: 4 
         }
       ).addTo(mapDiv.value);
       geojson.value = L.geoJSON(borders.value, {
-        style: setStyle, // stylet
-        onEachFeature: onEachFeature // kutsutaan joka featuressa (lisää listeners ja muita memes)
+        style: setStyle, 
+        onEachFeature: onEachFeature
       }).addTo(mapDiv.value);
+    };
+
+    const sideActive = () => {
+      active.value = false;
+      geojson.value.resetStyle();
+    };
+    const bandDetails = (x) => {
+      activeModal.value = true;
+      band.value = x;
+    };
+    const closeModal = () => {
+      activeModal.value = false;
     };
 
     onMounted(() => {
       bounds.value = ref(new L.LatLngBounds(new L.LatLng(-60, -181),  new L.LatLng(90, 181))); 
       initMap();
      })
+
+
 
 </script>
 
