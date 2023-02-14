@@ -4,14 +4,14 @@
         <a @click="close"><i>X</i></a>
         <h2>{{ country }}</h2>
         <p>Population: {{ population }}</p>
+        <p>Number of bands: {{ bandlist.length }}</p>
       </div>
       <div class="block">
-      <p>Number of bands: {{ population }}</p>
     </div>
     <div class="search">
       <p class="control has-icons-left">
         <input
-          v-model="searchText"
+          v-model="searchStr"
           class="input"
           type="text"
           placeholder="Search"
@@ -24,7 +24,7 @@
     </div>
     <div class="banditems" v-if="!state.haettu">
       <BandItem
-        v-for="band in datakys"
+        v-for="band in bandlist"
         :key="band.id"
         :band="band"
         @pass-details="openDetails"
@@ -32,7 +32,7 @@
     </div>
     <div class="banditems" v-if="state.haettu">
       <BandItem
-        v-for="band in filteredBands"
+        v-for="band in filteredBandList"
         :key="band.id"
         :band="band"
         @pass-details="openDetails"
@@ -43,21 +43,24 @@
 </template>
 
 <script setup>
-import { getBandsInCountry } from '../controllers/bandController';
+import { getBandsInCountry, queryBands } from '../controllers/bandController';
 
 const props = defineProps(['active', 'population', 'country'])
 const emit = defineEmits(['side-active', 'open-details'])
 
 //const { data } = await getBandsInCountry(props.country)
-const datakys = ref("")
-
+const bandlist = ref("")
+const filteredBandList = ref("")
+const selectedCountry = ref(props.country)
+const searchStr = ref("");
 
 watch(
   () => props.country, async (country) => {
     console.log("country changed" + country);
-    const { data } = await getBandsInCountry(country);
-    console.log(data)
-    datakys.value = data.value;
+    selectedCountry.value = country;
+    const bands = await getBandsInCountry(country);
+    //console.log(bands.value)
+    bandlist.value = bands.value;
     state.haettu = false;
   }
 )
@@ -75,10 +78,17 @@ watch(
     }
     })
 */ 
-const searchText = ref("");
+
 const state = reactive({
   haettu: false
 });
+
+const search = async () => {
+      state.haettu = searchStr.value.length > 0 ? true : false;
+      const { data } = await queryBands({country: selectedCountry.value, name: searchStr});
+      console.log(data.value)
+      filteredBandList.value = data.value;
+    };
 
 const close = () => {
   emit("side-active");

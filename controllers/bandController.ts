@@ -18,8 +18,11 @@ export const getBands = () => {
  * @param country Name of country, can be a partial string
  * @returns filtered band data 
  */
-export const getBandsInCountry = (country : String) => {
-    return useFetch(`/api/bands/country/${country}`);
+export const getBandsInCountry = async (country : String) => {
+    if (country === "Czech Rep.") country = "Czechia";
+    country = country.replace(" ", "_")
+    const { data } = await useFetch(`/api/bands/country/${country}`);
+    return data;
 }
 
 /**
@@ -28,7 +31,9 @@ export const getBandsInCountry = (country : String) => {
  * @returns filtered band data
  */
 export const queryBands = async (filters : QueryObject) => {
-    const { country, name, genre, status } = filters;
+    let { country, name, genre, status } = filters;
+    if (country === "Czech Rep.") country = "Czechia";
+    country = country.replace(" ", "_")
     let route = `/api/bands`;
     if(country) route += `/country/${country}`;
 
