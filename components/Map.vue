@@ -9,6 +9,11 @@
       @open-details="bandDetails"
       
       />
+      <BandInfo
+      :activeModal="activeModal"
+      :band="band"
+      @modal-active="closeModal"
+    />
     </div>
 </template>
 
@@ -17,7 +22,7 @@ import "leaflet/dist/leaflet.css";
 import borderData from "~/assets/geoLow.json"
 const { $L : L } = useNuxtApp();
 
-
+const emit = defineEmits(["details"]);
 
 const geojson = ref(null);
     const mapDiv = ref(null);
@@ -56,7 +61,6 @@ const setStyle = () => {
       !active.value ? geojson.value.resetStyle(e.target) : null;
     };
     const zoomToFeature = (e) => {
-      const countryCode = e.target.feature.properties.iso_a2;
       geojson.value.resetStyle();
       mapDiv.value.fitBounds(e.target.getBounds());
       active.value = true;

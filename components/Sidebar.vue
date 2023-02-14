@@ -3,20 +3,89 @@
     <div class="head">
         <a @click="close"><i>X</i></a>
         <h2>{{ country }}</h2>
+        <p>Population: {{ population }}</p>
+      </div>
+      <div class="block">
+      <p>Number of bands: {{ population }}</p>
     </div>
-    <div class="block">
-        <p>Number of bands: {{  }}</p>
+    <div class="search">
+      <p class="control has-icons-left">
+        <input
+          v-model="searchText"
+          class="input"
+          type="text"
+          placeholder="Search"
+          @keyup="search"
+        />
+        <span class="icon is-left">
+          <i class="fas fa-search" aria-hidden="true" />
+        </span>
+      </p>
+    </div>
+    <div class="banditems" v-if="!state.haettu">
+      <BandItem
+        v-for="band in datakys"
+        :key="band.id"
+        :band="band"
+        @pass-details="openDetails"
+      />
+    </div>
+    <div class="banditems" v-if="state.haettu">
+      <BandItem
+        v-for="band in filteredBands"
+        :key="band.id"
+        :band="band"
+        @pass-details="openDetails"
+      />
     </div>
 
     </div>
 </template>
 
 <script setup>
-import { getBandsInCountry } from '~~/controllers/bandController';
+import { getBandsInCountry } from '../controllers/bandController';
 
-const props = defineProps(['country'])
-const { data } = await getBandsInCountry(props.country)
-console.log(data);
+const props = defineProps(['active', 'population', 'country'])
+const emit = defineEmits(['side-active', 'open-details'])
+
+//const { data } = await getBandsInCountry(props.country)
+const datakys = ref("")
+
+
+watch(
+  () => props.country, async (country) => {
+    console.log("country changed" + country);
+    const { data } = await getBandsInCountry(country);
+    console.log(data)
+    datakys.value = data.value;
+    state.haettu = false;
+  }
+)
+/*
+watch(
+  () => props.country,
+  async (value, oldValue) => {
+    bandTest.splice(0, bandTest.length);
+    state.haettu = false;
+    searchText.value = "";
+    const { data } = await getBandsInCountry(value);
+    console.log(data)
+    for(const band of data) {
+      bandTest.push(band)
+    }
+    })
+*/ 
+const searchText = ref("");
+const state = reactive({
+  haettu: false
+});
+
+const close = () => {
+  emit("side-active");
+};
+const openDetails = (x) => {
+  emit("open-details", x);
+}
 
 </script>
 
@@ -50,5 +119,36 @@ console.log(data);
   -webkit-transform: translateX(-25vw);
   transform: translateX(-25vw);
   overflow: auto;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  font-size: 30px;
+  text-align: center;
+  color: white;
+  opacity: 0.9;
+}
+.head a {
+  font-size: 35px;
+  text-align: right;
+  margin-right: 1vw;
+  color: white;
+  opacity: 0.5;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.head a:hover {
+  opacity: 1;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.block {
+  text-align: center;
+}
+.search {
+  margin-top: 2vh;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  margin-bottom: 2vh;
 }
 </style>
