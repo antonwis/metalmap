@@ -15,7 +15,7 @@
           class="input"
           type="text"
           placeholder="Search"
-          @keyup="search"
+          @input="delaySearch"
         />
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true" />
@@ -57,27 +57,14 @@ const searchStr = ref("");
 watch(
   () => props.country, async (country) => {
     console.log("country changed" + country);
+    searchStr.value = "";
     selectedCountry.value = country;
-    const bands = await getBandsInCountry(country);
+    const bands = await getBandsInCountry(selectedCountry.value);
     //console.log(bands.value)
     bandlist.value = bands.value;
     state.haettu = false;
   }
 )
-/*
-watch(
-  () => props.country,
-  async (value, oldValue) => {
-    bandTest.splice(0, bandTest.length);
-    state.haettu = false;
-    searchText.value = "";
-    const { data } = await getBandsInCountry(value);
-    console.log(data)
-    for(const band of data) {
-      bandTest.push(band)
-    }
-    })
-*/ 
 
 const state = reactive({
   haettu: false
@@ -85,10 +72,13 @@ const state = reactive({
 
 const search = async () => {
       state.haettu = searchStr.value.length > 0 ? true : false;
-      const { data } = await queryBands({country: selectedCountry.value, name: searchStr});
+      const filters = {country: selectedCountry.value, name: searchStr.value};
+      const { data } = await queryBands(filters);
       console.log(data.value)
       filteredBandList.value = data.value;
-    };
+    }
+
+
 
 const close = () => {
   emit("side-active");
@@ -97,6 +87,18 @@ const openDetails = (x) => {
   emit("open-details", x);
 }
 
+const debounce = (fn, delay) => {
+  let timeout
+  return (...args) => {
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(() => {
+      fn(...args)
+    }, delay)
+  }
+}
+const delaySearch = debounce(search, 500);
 </script>
 
 <style scoped>
