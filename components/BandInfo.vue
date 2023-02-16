@@ -1,19 +1,19 @@
 <template>
     <div :class="activeModal ? 'bandinfoActive' : 'bandinfoDeactive'">
-    <div class="x">
+    <div class="flex justify-between p-5 text-3xl text-gray-50 border-solid border-2">
       <h1 v-if="band">{{ band.name }}</h1>
       <a @click="close"><i>X</i> </a>
     </div>
-    <div class="containerlol" v-if="band">
-    <h1>Genre: {{ band.genre }}</h1>
-    <h1>Country: {{ band.country }}</h1>
+    <div class="flex border-solid text-gray-50" v-if="band">
+      <h1 class="text-2xl">Genre: {{ band.genre }}</h1>
+      <h1 class="text-2xl">Country: {{ band.country }}</h1>
     </div>
 
     </div>
 </template>
 
 <script setup>
-const props = defineProps(['band', 'activeModal'])
+defineProps(['band', 'activeModal'])
 const emit = defineEmits(['modal-active'])
 
 const close = () => {
@@ -24,11 +24,6 @@ const close = () => {
 </script>
 
 <style scoped>
-.containerlol {
-  display: flex;
-  border: solid;
-  color: gray;
-}
 .x {
   padding: 5px;
   display: flex;

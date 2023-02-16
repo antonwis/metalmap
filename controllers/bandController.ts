@@ -33,7 +33,7 @@ export const getBandsInCountry = async (country : String) => {
 export const queryBands = async (filters : QueryObject) => {
     let { country, name, genre, status } = filters;
     if (country === "Czech Rep.") country = "Czechia";
-    country = country.replace(" ", "_")
+    country = country.replace(" ", "_");
     let route = `/api/bands`;
     if(country) route += `/country/${country}`;
 

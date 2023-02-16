@@ -17,5 +17,6 @@ export default defineNuxtConfig({
                 name: "description", content: "Browse metal bands from all around the world"
             }]
         }
-    }
+    },
+    modules: ['@nuxtjs/tailwindcss']
 })
