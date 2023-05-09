@@ -2,11 +2,14 @@
     <div :class="activeModal ? 'bandinfoActive' : 'bandinfoDeactive'">
     <div class="flex justify-between p-5 text-3xl text-gray-50 border-solid border-2">
       <h1 v-if="band">{{ band.name }}</h1>
-      <a @click="close"><i>X</i> </a>
+      <button @click="close"><i>X</i> </button>
     </div>
-    <div class="flex border-solid text-gray-50" v-if="band">
+    <div class="flex flex-col border-solid text-gray-50" v-if="band">
       <h1 class="text-2xl">Genre: {{ band.genre }}</h1>
+      <h1 class="text-2xl">Status: {{ band.status }}</h1>
       <h1 class="text-2xl">Country: {{ band.country }}</h1>
+      <h1 class="text-2xl">View on:
+        <a :href="band.link" target="_blank">Metal-archives</a></h1>
     </div>
 
     </div>

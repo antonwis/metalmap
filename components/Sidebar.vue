@@ -1,7 +1,7 @@
 <template>
     <div :class="active ? 'active' : 'inactive'">
     <div class="head">
-        <a @click="close"><i>X</i></a>
+        <button @click="close"><i>X</i></button>
         <h2>{{ country }}</h2>
         <p>Population: {{ population }}</p>
         <p>Number of bands: {{ bandlist.length }}</p>
@@ -140,7 +140,7 @@ const delaySearch = debounce(search, 500);
   color: white;
   opacity: 0.9;
 }
-.head a {
+.head button {
   font-size: 35px;
   text-align: right;
   margin-right: 1vw;
@@ -149,7 +149,7 @@ const delaySearch = debounce(search, 500);
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.head a:hover {
+.head button:hover {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
