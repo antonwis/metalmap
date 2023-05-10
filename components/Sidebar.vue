@@ -9,17 +9,14 @@
       <div class="block">
     </div>
     <div class="search">
-      <p class="control has-icons-left">
+      <p class="">
         <input
           v-model="searchStr"
-          class="input"
+          class="input pl-2 text-left"
           type="text"
-          placeholder="Search"
+          placeholder="Search for bands"
           @input="delaySearch"
         />
-        <span class="icon is-left">
-          <i class="fas fa-search" aria-hidden="true" />
-        </span>
       </p>
     </div>
     <div class="banditems" v-if="!state.haettu">

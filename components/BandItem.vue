@@ -1,6 +1,7 @@
 <template>
-    <div class="containerlol" @click="sendDetails">
-      <div class="textcontainer">
+    <div class="flex flex-col items-center w-auto h-auto m-1 cursor-pointer border-solid border-green-900 border-2 border-opacity-50 hover:opacity-25"
+        @click="sendDetails">
+      <div class="text-lg text-white">
         <h1>{{ band.name }}</h1>
       </div>
     </div>
@@ -18,36 +19,9 @@ const sendDetails = () => {
   </script>
   
   <style scoped>
-  .containerlol {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-content: center;
-    width: auto;
-    height: auto; /* Tätä voi muokkailla sitte mielensä mukaan vaikka "10 tai 15vh" näyttää auto:llakin ihan jees*/
-    margin-top: 1vh;
-    margin-left: 1vw;
-    margin-right: 1vw;
-    border: solid;
-    border-radius: 2px;
-    cursor: pointer;
-    opacity: 0.5;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-    text-overflow: ellipsis;
-  }
-  .containerlol:hover {
-    opacity: 1;
-    -webkit-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-  }
   .imagecontainer {
     display: flex;
     height: 100%;
     overflow: hidden;
-  }
-  .textcontainer {
-    font-size: 20px;
-    color: white;
   }
   </style>
