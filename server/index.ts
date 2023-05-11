@@ -5,7 +5,7 @@ export default async (_nitroApp: Nitro) => {
     console.log("nitro plugin");
     const config = useRuntimeConfig();
 
-    /*
+        /*
     try {
         const connection = await mariadb.createConnection({
             socketPath: config.dbSocket,

@@ -1,13 +1,14 @@
 <template>
-    <div :class="activeModal ? 'bandinfoActive' : 'bandinfoDeactive'">
+    <div :class="activeModal ? 'bandinfoActive' : 'bandinfoNotActive'">
     <div class="flex justify-between p-5 text-3xl text-gray-50 border-solid border-2">
       <h1 v-if="band">{{ band.name }}</h1>
       <button @click="close"><i>X</i> </button>
     </div>
-    <div class="flex flex-col border-solid text-gray-50" v-if="band">
+    <div class="flex flex-col border-solid text-gray-50 m-5 p-5 w-max" v-if="band">
       <h1 class="text-2xl">Genre: {{ band.genre }}</h1>
       <h1 class="text-2xl">Status: {{ band.status }}</h1>
       <h1 class="text-2xl">Country: {{ band.country }}</h1>
+      <button @click="fetchData">test</button>
       <h1 class="text-2xl">View on:
         <a :href="band.link" target="_blank">Metal-archives</a></h1>
     </div>
@@ -16,8 +17,40 @@
 </template>
 
 <script setup>
-defineProps(['band', 'activeModal'])
+import { getBandInfo } from '../controllers/bandController';
+
+const props = defineProps(['band', 'activeModal'])
 const emit = defineEmits(['modal-active'])
+
+const logo = ref(null);
+const photo = ref(null);
+const formed = ref(null);
+const yearsActive = ref(null);
+const location = ref(null);
+const loading = ref(false);
+const albums = ref([]);
+
+const test = (x) => {
+  console.log(x.link);
+}
+
+const fetchData = async () => {
+  const link = props.band.link;
+  const info = await getBandInfo(link);
+  return info;
+}
+/*
+watch(() => (activeModal, band), value => {
+  logo.value = null;
+  photo.value = null;
+  formed.value = null;
+  yearsActive.value = null;
+  location.value = null;
+  albums.value = null;
+  //fetchData().then()
+
+})
+*/
 
 const close = () => {
       emit("modal-active");
@@ -100,7 +133,7 @@ const close = () => {
   -webkit-transform: translateY(0vw);
   transform: translateY(0vw);
 }
-.bandinfoDeactive {
+.bandinfoNotActive {
   z-index: 2;
   position: fixed;
   top: 30%;

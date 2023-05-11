@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     if(params.status) query += `status LIKE '%${params.status}%'`
     console.log("Query String: " + query)
 
-
+    
     let connection;
     try {
         connection = await pool.getConnection();
