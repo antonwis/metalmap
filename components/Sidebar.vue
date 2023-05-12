@@ -1,23 +1,23 @@
 <template>
     <div :class="active ? 'active' : 'inactive'">
-    <div class="head">
-        <button @click="close"><i>X</i></button>
-        <h2>{{ country }}</h2>
-        <p>Population: {{ population }}</p>
-        <p>Number of bands: {{ bandlist.length }}</p>
+    <div class="flex">
+      <div class="w-3/4 pt-4 pl-2 pb-2">
+        <h1 class=" text-4xl text-white text-left">{{ country }}</h1>
+        <p class="text-lg text-white">Population: {{ population }}</p>
+        <p class="text-lg text-white">Number of bands: {{ bandlist.length }}</p>
       </div>
-      <div class="block">
-    </div>
-    <div class="search">
-      <p class="">
+      <div class="w-1/4 text-end pr-4 pt-2 text-4xl">
+        <button @click="close" class="italic">X</button>
+      </div>
+      </div>
+    <div class="search pr-2 py-3 border-dotted border-t-2 border-gray-700">
         <input
           v-model="searchStr"
-          class="input pl-2 text-left"
+          class="input m-1 text-left pl-1 border-solid border-2 border-gray-700 bg-gray-700 text-white"
           type="text"
           placeholder="Search for bands"
           @input="delaySearch"
         />
-      </p>
     </div>
     <div class="banditems" v-if="!state.haettu">
       <BandItem
@@ -132,32 +132,50 @@ const delaySearch = debounce(search, 500);
 .head {
   display: flex;
   flex-direction: column;
-  font-size: 30px;
+  font-size: 20px;
   text-align: center;
   color: white;
   opacity: 0.9;
 }
-.head button {
-  font-size: 35px;
-  text-align: right;
-  margin-right: 1vw;
+button {
   color: white;
   opacity: 0.5;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.head button:hover {
+button:hover {
   opacity: 1;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.block {
-  text-align: center;
-}
 .search {
-  margin-top: 2vh;
-  margin-left: 1vw;
-  margin-right: 1vw;
-  margin-bottom: 2vh;
+  width: 100%;
 }
+input {
+  width: 100%;
+  height: 32px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0f0f0f;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(55 65 81);
+  height: 30px;
+  border-radius:400em;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(20 83 45);
+}
+
 </style>

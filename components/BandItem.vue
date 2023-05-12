@@ -19,9 +19,4 @@ const sendDetails = () => {
   </script>
   
   <style scoped>
-  .imagecontainer {
-    display: flex;
-    height: 100%;
-    overflow: hidden;
-  }
   </style>

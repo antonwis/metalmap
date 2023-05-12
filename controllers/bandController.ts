@@ -1,5 +1,4 @@
 import cheerio from "cheerio";
-import { data } from "cheerio/lib/api/attributes";
 
 type QueryObject = {
     country: String,
