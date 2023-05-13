@@ -31,17 +31,22 @@ export const getBandsInCountry = async (country : String) => {
 export const getBandInfo = async (link : string) => {
     if(link) {
     try {
-    
     const reg = link.match(/\d+$/);
     const id = reg?.toString();
     let route = `api/bands/data`;
     const { data } = await useFetch(route, { method: 'post', body: { url: link, id: id}});
-    let $ = cheerio.load(data.value.html)
-    const photo = $('#photo').attr('href');
-    const logo = $('#logo').attr('href');
-    const location = $('#band_stats .float_left dt').nextAll().eq(2).text()
-    const formYear = $('#band_stats .float_left dt').nextAll().eq(6).text();
-    const yearsActive = $('#band_stats .clear dt').nextAll().eq(0).text()
+    let $;
+    let photo, logo, location, formYear, yearsActive;
+    let albumsFinal = null;
+    if(data.value.html) {
+    $ = cheerio.load(data.value.html)
+    photo = $('#photo').attr('href');
+    logo = $('#logo').attr('href');
+    location = $('#band_stats .float_left dt').nextAll().eq(2).text()
+    formYear = $('#band_stats .float_left dt').nextAll().eq(6).text();
+    yearsActive = $('#band_stats .clear dt').nextAll().eq(0).text()
+    }
+    if(data.value.discography) {
     $ = cheerio.load(data.value.discography);
     const albumLink:Array<string> = []
         const albumName:Array<string> = []
@@ -53,7 +58,8 @@ export const getBandInfo = async (link : string) => {
         $("body > table > tbody > tr > td:nth-child(3)").each((index,element) => {albumYear.push($(element.children).text())})
         $("body > table > tbody > tr > td:nth-child(1) > a").each((index,element) => {albumLink.push(element.attribs.href)})
         for (let i = 0; i < albumName.length; i++) {albums.push({name:albumName[i], type:albumType[i], year:albumYear[i],link:albumLink[i]})}
-        const albumsFinal = Object.assign({}, albums);
+        albumsFinal = Object.assign({}, albums);
+    }
 
         const bandInfo = {
             "photo": photo,
