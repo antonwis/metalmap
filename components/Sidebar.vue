@@ -1,5 +1,6 @@
 <template>
     <div :class="active ? 'active' : 'inactive'">
+      <div class="topcontainer">
     <div class="flex">
       <div class="w-3/4 pt-4 pl-2 pb-2">
         <h1 class=" text-4xl text-white text-left">{{ country }}</h1>
@@ -10,7 +11,7 @@
         <button @click="close" class="italic">X</button>
       </div>
       </div>
-    <div class="search pr-2 py-3 border-dotted border-t-2 border-gray-700">
+    <div class="search pr-2 py-1 border-dotted border-t-2 border-gray-700">
         <input
           v-model="searchStr"
           class="input m-1 text-left pl-1 border-solid border-2 border-gray-700 bg-gray-700 text-white"
@@ -19,23 +20,29 @@
           @input="delaySearch"
         />
     </div>
-    <div class="banditems" v-if="!state.haettu">
+  </div>
+  <div class="listcontainer">
+    <div v-bind="containerProps" class="h-[750px]" v-if="!state.haettu">
+      <div v-bind="wrapperProps">
       <BandItem
-        v-for="band in bandlist"
-        :key="band.id"
-        :band="band"
+      v-for="{index, data} in list"
+        :key="index"
+        :band="data"
         @pass-details="openDetails"
       />
     </div>
-    <div class="banditems" v-if="state.haettu">
+  </div>
+  <div v-bind="filterContainerProps" class="h-[750px]" v-if="state.haettu">
+      <div v-bind="filterWrapperProps">
       <BandItem
-        v-for="band in filteredBandList"
-        :key="band.id"
-        :band="band"
+      v-for="{index, data} in filteredlist"
+        :key="index"
+        :band="data"
         @pass-details="openDetails"
       />
     </div>
-
+  </div>
+  </div>
     </div>
 </template>
 
@@ -45,23 +52,33 @@ import { getBandsInCountry, queryBands } from '../controllers/bandController';
 const props = defineProps(['active', 'population', 'country'])
 const emit = defineEmits(['side-active', 'open-details'])
 
-//const { data } = await getBandsInCountry(props.country)
-const bandlist = ref("")
-const filteredBandList = ref("")
+const bandlist = ref([])
+const filteredBandList = ref([])
 const selectedCountry = ref(props.country)
 const searchStr = ref("");
 
+
+const { list, containerProps, wrapperProps } = useVirtualList(bandlist, {
+  itemHeight: 32
+});
+const { list: filteredlist, containerProps: filterContainerProps, wrapperProps: filterWrapperProps } = useVirtualList(filteredBandList, {
+  itemHeight: 32
+});
 watch(
   () => props.country, async (country) => {
-    console.log("country changed" + country);
-    searchStr.value = "";
-    selectedCountry.value = country;
+    try {
+      searchStr.value = "";
+      selectedCountry.value = country;
     const bands = await getBandsInCountry(selectedCountry.value);
-    //console.log(bands.value)
-    bandlist.value = bands.value;
-    state.haettu = false;
+      bandlist.value = bands.value;
+      state.haettu = false;
+  
+    }catch(e) {
+      console.log(e)
+    }
   }
-)
+  );
+  
 
 const state = reactive({
   haettu: false
@@ -71,7 +88,6 @@ const search = async () => {
       state.haettu = searchStr.value.length > 0 ? true : false;
       const filters = {country: selectedCountry.value, name: searchStr.value};
       const { data } = await queryBands(filters);
-      console.log(data.value)
       filteredBandList.value = data.value;
     }
 
@@ -99,10 +115,19 @@ const delaySearch = debounce(search, 500);
 </script>
 
 <style scoped>
+.topcontainer {
+  min-height: 176px;
+
+}
+.listcontainer {
+  max-height: 750px;
+
+}
+
 .active {
     position: fixed;
-  height: 100vh;
-  width: 20vw;
+  height: 100%;
+  width: 350px;
   opacity: 0.8;
   top: 0;
   left: 0;
@@ -112,7 +137,7 @@ const delaySearch = debounce(search, 500);
   transition: all 0.3s ease;
   -webkit-transform: translateX(0vw);
   transform: translateX(0vw);
-  overflow: auto;
+  overflow: hidden;
 }
 .inactive {
     position: fixed;
@@ -127,7 +152,7 @@ const delaySearch = debounce(search, 500);
   transition: all 0.3s ease;
   -webkit-transform: translateX(-25vw);
   transform: translateX(-25vw);
-  overflow: auto;
+  overflow: hidden;
 }
 .head {
   display: flex;
@@ -156,24 +181,21 @@ input {
   height: 32px;
 }
 
-/* width */
 ::-webkit-scrollbar {
   width: 12px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #0f0f0f;
+  
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: rgb(55 65 81);
   height: 30px;
   border-radius:400em;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(20 83 45);
 }

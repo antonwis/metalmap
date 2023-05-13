@@ -1,3 +1,4 @@
+// @ts-nocheck
 import cheerio from "cheerio";
 
 type QueryObject = {
@@ -28,13 +29,14 @@ export const getBandsInCountry = async (country : String) => {
 }
 
 export const getBandInfo = async (link : string) => {
+    if(link) {
+    try {
     
-    let url = link;
-    const id = url.match(/\d+$/).toString();
+    const reg = link.match(/\d+$/);
+    const id = reg?.toString();
     let route = `api/bands/data`;
-    const { data } = await useFetch(route, { method: 'post', body: { url: url, id: id}});
+    const { data } = await useFetch(route, { method: 'post', body: { url: link, id: id}});
     let $ = cheerio.load(data.value.html)
-    //console.log(data.value.discography);
     const photo = $('#photo').attr('href');
     const logo = $('#logo').attr('href');
     const location = $('#band_stats .float_left dt').nextAll().eq(2).text()
@@ -61,9 +63,12 @@ export const getBandInfo = async (link : string) => {
             "yearsActive": yearsActive,
             "albums" : albumsFinal
         }
-        console.log(bandInfo)
 
         return bandInfo;
+    } catch(e) {
+        console.log(e);
+    }
+}
     
 }
 

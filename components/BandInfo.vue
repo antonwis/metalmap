@@ -75,7 +75,6 @@ const fetchData = async () => {
   const link = props.band.link;
   resetValues();
   const info = await getBandInfo(link);
-  console.log(info)
   if (info) {
   info.logo !== undefined ? (logo.value = info.logo) : (logo.value = "/img/no-image-1.png");
   info.photo !== undefined ? (photo.value = info.photo) : (photo.value = "/img/no-image-1.png");
@@ -84,8 +83,6 @@ const fetchData = async () => {
   info.location !== undefined ? (location.value = info.location) : (location.value = null);
   info.albums !== undefined ? (albums.value = info.albums) : (albums.value = null);
   }
-  console.log(photo.value)
-    console.log(logo.value)
 }
 
   const toggleLoading = () => {
