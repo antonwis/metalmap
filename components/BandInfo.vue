@@ -29,7 +29,7 @@
             <tbody class="">
               <tr v-for="album in albums" :key="album.index">
                 <td>
-                  <a :href="album.link" target="_blank">{{ album.name }}</a>
+                  <a :href="album.link" target="_blank" class="text-red-500">{{ album.name }}</a>
                 </td>
                 <td>{{ album.type }}</td>
                 <td>{{ album.year }}</td>
