@@ -2,7 +2,7 @@
     <div :class="active ? 'active' : 'inactive'">
       <div class="topcontainer">
     <div class="flex">
-      <div class="w-3/4 pt-4 pl-2 pb-2">
+      <div class="w-3/4 pt-2 pl-2 pb-2">
         <h1 class=" text-4xl text-white text-left">{{ country }}</h1>
         <p class="text-lg text-white">Population: {{ population }}</p>
         <p class="text-lg text-white">Number of bands: {{ bandlist.length }}</p>
@@ -11,7 +11,7 @@
         <button @click="close" class="italic">X</button>
       </div>
       </div>
-    <div class="search pr-2 py-1 border-dotted border-t-2 border-gray-700">
+    <div class="search pr-5 py-2 border-dotted border-t-2 border-gray-700">
         <input
           v-model="searchStr"
           class="input m-1 text-left pl-1 border-solid border-2 border-gray-700 bg-gray-700 text-white"
