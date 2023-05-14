@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="listcontainer">
-    <div v-bind="containerProps" class="h-[750px]" v-if="!state.haettu">
+    <div v-bind="containerProps" class="h-[750px]" id="bandlist" v-if="!state.haettu">
       <div v-bind="wrapperProps">
       <BandItem
       v-for="{index, data} in list"
@@ -32,7 +32,7 @@
       />
     </div>
   </div>
-  <div v-bind="filterContainerProps" class="h-[750px]" v-if="state.haettu">
+  <div v-bind="filterContainerProps" class="h-[750px]" id="filteredlist" v-if="state.haettu">
       <div v-bind="filterWrapperProps">
       <BandItem
       v-for="{index, data} in filteredlist"
@@ -72,6 +72,7 @@ watch(
     const bands = await getBandsInCountry(selectedCountry.value);
       bandlist.value = bands.value;
       state.haettu = false;
+      document.getElementById("bandlist").scrollTo(0,0);
   
     }catch(e) {
       console.log(e)
@@ -89,6 +90,7 @@ const search = async () => {
       const filters = {country: selectedCountry.value, name: searchStr.value};
       const { data } = await queryBands(filters);
       filteredBandList.value = data.value;
+      document.getElementById("filteredlist").scrollTo(0,0);
     }
 
 
