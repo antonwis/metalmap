@@ -5,7 +5,8 @@
       <div class="w-3/4 pt-2 pl-2 pb-2">
         <h1 class=" text-4xl text-white text-left">{{ country }}</h1>
         <p class="text-lg text-white">Population: {{ population }}</p>
-        <p class="text-lg text-white">Number of bands: {{ bandlist.length }}</p>
+        <p v-if="bandlist" class="text-lg text-white">Number of bands: {{ bandlist.length }}</p>
+        <p v-else class="text-lg text-white">Number of bands: 0</p>
       </div>
       <div class="w-1/4 text-end pr-4 pt-2 text-4xl">
         <button @click="close" class="italic">X</button>
@@ -69,10 +70,12 @@ watch(
     try {
       searchStr.value = "";
       selectedCountry.value = country;
+      if(country !== "Côte d'Ivoire") {
     const bands = await getBandsInCountry(selectedCountry.value);
       bandlist.value = bands.value;
       state.haettu = false;
       document.getElementById("bandlist").scrollTo(0,0);
+      }
   
     }catch(e) {
       console.log(e)
